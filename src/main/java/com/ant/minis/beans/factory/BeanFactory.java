@@ -25,11 +25,22 @@ public interface BeanFactory {
 
     /**
      * <p>
+     * 容器中是否包含 Bean
+     * </p>
+     *
+     * @param name
+     * @return java.lang.Boolean
+     */
+    Boolean containsBean(String name);
+
+    /**
+     * <p>
      * 根据 BeanDefinition 注册实例到 Bean 工厂
      * </p>
      *
-     * @param beanDefinition
+     * @param beanName  注册beanName
+     * @param obj       注册类对象
      */
-    void registerBeanDefinition(BeanDefinition beanDefinition);
+    void registerBean( String beanName, Object obj);
 }
 

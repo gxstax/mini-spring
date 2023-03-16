@@ -37,7 +37,7 @@ public class ClassPathXmlApplicationContext {
      */
     public ClassPathXmlApplicationContext(String fileName) {
         Resource resource = new ClassPathXmlResource(fileName);
-        BeanFactory beanFactory = new SimpleBeanFactory();
+        SimpleBeanFactory beanFactory = new SimpleBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions(resource);
         this.beanFactory = beanFactory;
@@ -57,13 +57,26 @@ public class ClassPathXmlApplicationContext {
 
     /**
      * <p>
+     * 是否存在指定name的bean对象
+     * </p>
+     *
+     * @param name  指定的beanName
+     * @return 是否存在指定name的Bean
+     */
+    public Boolean containsBean(String name) {
+        return this.beanFactory.containsBean(name);
+    }
+
+    /**
+     * <p>
      * 注册bean
      * </p>
      *
-     * @param beanDefinition
+     * @param beanName  指定要注册的bean名称
+     * @param obj       要注册仅容器的bean
      */
-    public void registerBeanDefinition(BeanDefinition beanDefinition) {
-        this.beanFactory.registerBeanDefinition(beanDefinition);
+    public void registerBean(String beanName, Object obj) {
+        this.beanFactory.registerBean(beanName, obj);
     }
 
 }

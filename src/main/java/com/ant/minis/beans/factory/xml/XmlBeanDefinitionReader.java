@@ -3,6 +3,7 @@ package com.ant.minis.beans.factory.xml;
 
 import com.ant.minis.beans.BeanDefinition;
 import com.ant.minis.beans.factory.BeanFactory;
+import com.ant.minis.beans.factory.SimpleBeanFactory;
 import com.ant.minis.core.io.Resource;
 import org.dom4j.Element;
 
@@ -15,9 +16,9 @@ import org.dom4j.Element;
  * @since 2023/3/16 01:08
  **/
 public class XmlBeanDefinitionReader {
-    private BeanFactory beanFactory;
+    private SimpleBeanFactory beanFactory;
 
-    public XmlBeanDefinitionReader(BeanFactory beanFactory) {
+    public XmlBeanDefinitionReader(SimpleBeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
