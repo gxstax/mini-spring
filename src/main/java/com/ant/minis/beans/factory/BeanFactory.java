@@ -41,6 +41,26 @@ public interface BeanFactory {
      * @param beanName  注册beanName
      * @param obj       注册类对象
      */
-    void registerBean( String beanName, Object obj);
+    void registerBean(String beanName, Object obj);
+
+    /**
+     * <p>
+     * 判断指定的 beanName 的 Bean 是否是单例模式
+     * </p>
+     *
+     * @param beanName
+     * @return boolean
+     */
+    boolean isSingleton(String beanName);
+
+    /**
+     * <p>
+     * 判断指定 beanName 的 Bean 是否是原型模式
+     * </p>
+     *
+     * @param beanName
+     * @return boolean
+     */
+    boolean isProtocol(String beanName);
 }
 

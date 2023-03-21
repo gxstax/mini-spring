@@ -1,19 +1,12 @@
 package com.ant.minis.context;
 
 
-import com.ant.minis.beans.BeanDefinition;
 import com.ant.minis.beans.BeansException;
 import com.ant.minis.beans.factory.BeanFactory;
 import com.ant.minis.beans.factory.SimpleBeanFactory;
 import com.ant.minis.beans.factory.xml.XmlBeanDefinitionReader;
 import com.ant.minis.core.io.ClassPathXmlResource;
 import com.ant.minis.core.io.Resource;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
-import java.net.URL;
-import java.util.*;
 
 /**
  * <p>
@@ -23,8 +16,9 @@ import java.util.*;
  * @author Ant
  * @since 2023/3/16 00:34
  **/
-public class ClassPathXmlApplicationContext {
-    private BeanFactory beanFactory;
+public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationEventPublisher {
+
+    private final BeanFactory beanFactory;
 
     /**
      * <p>
@@ -79,5 +73,42 @@ public class ClassPathXmlApplicationContext {
         this.beanFactory.registerBean(beanName, obj);
     }
 
+    /**
+     * <p>
+     * 判断指定的 beanName 的 Bean 是否是单例模式
+     * </p>
+     *
+     * @param beanName
+     * @return boolean
+     */
+    @Override
+    public boolean isSingleton(String beanName) {
+        return false;
+    }
+
+    /**
+     * <p>
+     * 判断指定 beanName 的 Bean 是否是原型模式
+     * </p>
+     *
+     * @param beanName
+     * @return boolean
+     */
+    @Override
+    public boolean isProtocol(String beanName) {
+        return false;
+    }
+
+    /**
+     * <p>
+     * 事件发布
+     * </p>
+     *
+     * @param event 事件
+     */
+    @Override
+    public void publishEvent(ApplicationEvent event) {
+
+    }
 }
 

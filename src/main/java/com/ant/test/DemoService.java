@@ -8,6 +8,6 @@ package com.ant.test;
  * @author Ant
  * @since 2023/3/16 00:46
  **/
-public interface AService {
+public interface DemoService {
     void sayHello();
 }
