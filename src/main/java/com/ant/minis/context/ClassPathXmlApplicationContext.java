@@ -18,7 +18,11 @@ import com.ant.minis.core.io.Resource;
  **/
 public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationEventPublisher {
 
-    private final BeanFactory beanFactory;
+    private SimpleBeanFactory beanFactory;
+
+    public ClassPathXmlApplicationContext(String fileName) {
+        this(fileName, true);
+    }
 
     /**
      * <p>
@@ -29,12 +33,15 @@ public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationE
      * @param fileName
      * @return null
      */
-    public ClassPathXmlApplicationContext(String fileName) {
+    public ClassPathXmlApplicationContext(String fileName, boolean isRefresh) {
         Resource resource = new ClassPathXmlResource(fileName);
         SimpleBeanFactory beanFactory = new SimpleBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions(resource);
         this.beanFactory = beanFactory;
+        if (!isRefresh) {
+            this.beanFactory.refresh();
+        }
     }
 
     /**

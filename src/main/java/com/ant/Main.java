@@ -2,13 +2,13 @@ package com.ant;
 
 import com.ant.minis.beans.BeansException;
 import com.ant.minis.context.ClassPathXmlApplicationContext;
-import com.ant.test.DemoService;
+import com.ant.test.AService;
 
 public class Main {
     public static void main(String[] args) throws BeansException {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("beans.xml", false);
 
-        DemoService aservice = (DemoService) context.getBean("aservice");
+        AService aservice = (AService) context.getBean("aService");
         aservice.sayHello();
     }
 }

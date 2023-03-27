@@ -50,7 +50,7 @@ public class PropertyValues {
      * @param value         属性值
      */ 
     public void addPropertyValue(String propertyName, Object value) {
-        this.propertyValueList.add(new PropertyValue(propertyName, value));
+        this.propertyValueList.add(new PropertyValue(null, propertyName, value, false));
     }
 
     /**
@@ -98,5 +98,8 @@ public class PropertyValues {
     }
 
 
+    public List<PropertyValue> getPropertyValueList() {
+        return this.propertyValueList;
+    }
 }
 

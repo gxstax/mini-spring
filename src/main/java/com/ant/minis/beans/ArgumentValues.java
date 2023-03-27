@@ -18,15 +18,11 @@ public class ArgumentValues {
     public ArgumentValues() {
     }
 
-    private void addArgumentValue(Integer key, ArgumentValue value) {
-        this.indexedArgumentValues.put(key, value);
-    }
-
     public boolean hasIndexArgumentValue(int index) {
         return this.indexedArgumentValues.containsKey(index);
     }
 
-    public ArgumentValue getIndexArgumentValue(int index) {
+    public ArgumentValue getIndexedArgumentValue(int index) {
         return this.indexedArgumentValues.get(index);
     }
 
@@ -34,13 +30,17 @@ public class ArgumentValues {
         this.genericArgumentValues.add(new ArgumentValue(value, type));
     }
 
-    private void addGenericArgumentValue(ArgumentValue newValue) {
+    public void addIndexedArgumentValues(Integer index, ArgumentValue argumentValue) {
+        this.indexedArgumentValues.put(index, argumentValue);
+    }
+
+    public void addGenericArgumentValue(ArgumentValue newValue) {
         if (null != newValue.getName()) {
             Iterator<ArgumentValue> iterator = this.genericArgumentValues.iterator();
             for (Iterator<ArgumentValue> it =
-                 this.genericArgumentValues.iterator(); it.hasNext();) {
+                 iterator; it.hasNext();) {
                 ArgumentValue currentArgument = it.next();
-                if (currentArgument.getName().equals(currentArgument.getName())) {
+                if (currentArgument.getName().equals(newValue.getName())) {
                     it.remove();
                 }
             }
@@ -66,5 +66,6 @@ public class ArgumentValues {
     public boolean isEmpty() {
         return this.genericArgumentValues.isEmpty();
     }
+
 }
 

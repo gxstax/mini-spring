@@ -18,7 +18,7 @@ public class BeanDefinition {
 
     private String[] dependsOn;
 
-    private ArgumentValues constructArgumentValues;
+    private ArgumentValues constructorArgumentValues;
     private PropertyValues propertyValues;
     // 初始化方法名
     private String initMethodName;
@@ -53,8 +53,8 @@ public class BeanDefinition {
         return dependsOn;
     }
 
-    public ArgumentValues getConstructArgumentValues() {
-        return constructArgumentValues;
+    public ArgumentValues getConstructorArgumentValues() {
+        return constructorArgumentValues;
     }
 
     public PropertyValues getPropertyValues() {
@@ -92,6 +92,18 @@ public class BeanDefinition {
 
     public void setClassName(String className) {
         this.className = className;
+    }
+
+    public void setConstructorArgumentValues(ArgumentValues constructorArgumentValues) {
+        this.constructorArgumentValues = constructorArgumentValues;
+    }
+
+    public void setPropertyValues(PropertyValues propertyValues) {
+        this.propertyValues = propertyValues;
+    }
+
+    public void setDependsOn(String[] dependsOn) {
+        this.dependsOn = dependsOn;
     }
 }
 

@@ -9,7 +9,7 @@ package com.ant.test;
  * @author Ant
  * @since 2023/3/17 12:24
  **/
-public class BServiceImpl implements DemoService {
+public class BServiceImpl implements AService {
 
     private String name;
     private Integer level;
