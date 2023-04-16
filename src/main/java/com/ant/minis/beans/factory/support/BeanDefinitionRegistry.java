@@ -1,6 +1,6 @@
 package com.ant.minis.beans.factory.support;
 
-import com.ant.minis.beans.BeanDefinition;
+import com.ant.minis.beans.factory.config.BeanDefinition;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ public interface BeanDefinitionRegistry {
      * </p>
      *
      * @param beanName
-     * @return com.ant.minis.beans.BeanDefinition
+     * @return com.ant.minis.beans.factory.config.BeanDefinition
      */
     BeanDefinition getBeanDefinition(String beanName);
 

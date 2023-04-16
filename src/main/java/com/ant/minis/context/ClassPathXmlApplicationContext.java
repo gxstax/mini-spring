@@ -4,6 +4,8 @@ package com.ant.minis.context;
 import com.ant.minis.beans.BeansException;
 import com.ant.minis.beans.factory.BeanFactory;
 import com.ant.minis.beans.factory.SimpleBeanFactory;
+import com.ant.minis.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
+import com.ant.minis.beans.factory.config.AutowireCapableBeanFactory;
 import com.ant.minis.beans.factory.xml.XmlBeanDefinitionReader;
 import com.ant.minis.core.io.ClassPathXmlResource;
 import com.ant.minis.core.io.Resource;
@@ -18,7 +20,7 @@ import com.ant.minis.core.io.Resource;
  **/
 public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationEventPublisher {
 
-    private SimpleBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
 
     public ClassPathXmlApplicationContext(String fileName) {
         this(fileName, true);
@@ -35,13 +37,26 @@ public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationE
      */
     public ClassPathXmlApplicationContext(String fileName, boolean isRefresh) {
         Resource resource = new ClassPathXmlResource(fileName);
-        SimpleBeanFactory beanFactory = new SimpleBeanFactory();
+        AutowireCapableBeanFactory beanFactory = new AutowireCapableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
         reader.loadBeanDefinitions(resource);
         this.beanFactory = beanFactory;
         if (!isRefresh) {
             this.beanFactory.refresh();
         }
+    }
+
+    public void refresh() {
+        registerBeanPostProcessors(this.beanFactory);
+        onRefresh();
+    }
+
+    private void registerBeanPostProcessors(AutowireCapableBeanFactory beanFactory) {
+        beanFactory.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
+    }
+
+    private void onRefresh() {
+        this.beanFactory.refresh();
     }
 
     /**
@@ -102,8 +117,21 @@ public class ClassPathXmlApplicationContext implements BeanFactory, ApplicationE
      * @return boolean
      */
     @Override
-    public boolean isProtocol(String beanName) {
+    public boolean isPrototype(String beanName) {
         return false;
+    }
+
+    /**
+     * <p>
+     * 获取bean的类型
+     * </p>
+     *
+     * @param name
+     * @return java.lang.Class<?>
+     */
+    @Override
+    public Class<?> getType(String name) throws BeansException {
+        return null;
     }
 
     /**

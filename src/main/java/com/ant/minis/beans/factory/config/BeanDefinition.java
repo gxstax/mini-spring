@@ -1,5 +1,7 @@
-package com.ant.minis.beans;
+package com.ant.minis.beans.factory.config;
 
+
+import com.ant.minis.beans.PropertyValues;
 
 /**
  * <p>
@@ -18,7 +20,7 @@ public class BeanDefinition {
 
     private String[] dependsOn;
 
-    private ArgumentValues constructorArgumentValues;
+    private ConstructorArgumentValues constructorArgumentValues;
     private PropertyValues propertyValues;
     // 初始化方法名
     private String initMethodName;
@@ -53,7 +55,7 @@ public class BeanDefinition {
         return dependsOn;
     }
 
-    public ArgumentValues getConstructorArgumentValues() {
+    public ConstructorArgumentValues getConstructorArgumentValues() {
         return constructorArgumentValues;
     }
 
@@ -94,7 +96,7 @@ public class BeanDefinition {
         this.className = className;
     }
 
-    public void setConstructorArgumentValues(ArgumentValues constructorArgumentValues) {
+    public void setConstructorArgumentValues(ConstructorArgumentValues constructorArgumentValues) {
         this.constructorArgumentValues = constructorArgumentValues;
     }
 

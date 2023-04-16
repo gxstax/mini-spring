@@ -3,6 +3,10 @@ package com.ant.minis.beans.factory.xml;
 
 import com.ant.minis.beans.*;
 import com.ant.minis.beans.factory.SimpleBeanFactory;
+import com.ant.minis.beans.factory.config.AutowireCapableBeanFactory;
+import com.ant.minis.beans.factory.config.ConstructorArgumentValue;
+import com.ant.minis.beans.factory.config.ConstructorArgumentValues;
+import com.ant.minis.beans.factory.config.BeanDefinition;
 import com.ant.minis.core.io.Resource;
 import org.dom4j.Element;
 
@@ -18,9 +22,9 @@ import java.util.List;
  * @since 2023/3/16 01:08
  **/
 public class XmlBeanDefinitionReader {
-    private SimpleBeanFactory simpleBeanFactory;
+    private AutowireCapableBeanFactory simpleBeanFactory;
 
-    public XmlBeanDefinitionReader(SimpleBeanFactory simpleBeanFactory) {
+    public XmlBeanDefinitionReader(AutowireCapableBeanFactory simpleBeanFactory) {
         this.simpleBeanFactory = simpleBeanFactory;
     }
 
@@ -63,19 +67,19 @@ public class XmlBeanDefinitionReader {
 
             // 处理构造器函数
             int i = 0;
-            ArgumentValues AVS = new ArgumentValues();
+            ConstructorArgumentValues AVS = new ConstructorArgumentValues();
             List<Element> constructorElements = element.elements("constructor-arg");
             for (Element constructorElement : constructorElements) {
                 String type = constructorElement.attributeValue("type");
                 String name = constructorElement.attributeValue("name");
                 String value = constructorElement.attributeValue("value");
-                ArgumentValue argumentValue = new ArgumentValue(value, type, name);
-                AVS.addGenericArgumentValue(argumentValue);
-                AVS.addIndexedArgumentValues(i++, argumentValue);
+                ConstructorArgumentValue constructorArgumentValue = new ConstructorArgumentValue(value, type, name);
+                AVS.addGenericArgumentValue(constructorArgumentValue);
+                AVS.addIndexedArgumentValues(i++, constructorArgumentValue);
             }
             beanDefinition.setConstructorArgumentValues(AVS);
 
-            this.simpleBeanFactory.registerBeanDefinition(beanDefinition);
+            this.simpleBeanFactory.registerBeanDefinition(beanId, beanDefinition);
         }
     }
 }

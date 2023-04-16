@@ -1,7 +1,6 @@
 package com.ant.minis.beans.factory;
 
 
-import com.ant.minis.beans.BeanDefinition;
 import com.ant.minis.beans.BeansException;
 
 /**
@@ -35,16 +34,6 @@ public interface BeanFactory {
 
     /**
      * <p>
-     * 根据 BeanDefinition 注册实例到 Bean 工厂
-     * </p>
-     *
-     * @param beanName  注册beanName
-     * @param obj       注册类对象
-     */
-    void registerBean(String beanName, Object obj);
-
-    /**
-     * <p>
      * 判断指定的 beanName 的 Bean 是否是单例模式
      * </p>
      *
@@ -61,6 +50,16 @@ public interface BeanFactory {
      * @param beanName
      * @return boolean
      */
-    boolean isProtocol(String beanName);
+    boolean isPrototype(String beanName);
+
+    /**
+     * <p>
+     * 获取bean的类型
+     * </p>
+     *
+     * @param name
+     * @return java.lang.Class<?>
+     */
+    Class<?> getType(String name) throws BeansException;
 }
 
