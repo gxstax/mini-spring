@@ -1,12 +1,7 @@
 package com.ant.minis.beans.factory.config;
 
-
 import com.ant.minis.beans.BeansException;
-import com.ant.minis.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor;
-import com.ant.minis.beans.factory.support.AbstractBeanFactory;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.ant.minis.beans.factory.BeanFactory;
 
 /**
  * <p>
@@ -16,64 +11,14 @@ import java.util.List;
  * @author Ant
  * @since 2023/4/6 00:26
  **/
-public class AutowireCapableBeanFactory extends AbstractBeanFactory {
+public interface AutowireCapableBeanFactory extends BeanFactory {
+    int AUTOWIRE_NO = 0;
+    int AUTOWIRE_BY_NAME = 1;
+    int AUTOWIRE_BY_TYPE = 2;
 
-    private final List<AutowiredAnnotationBeanPostProcessor> beanPostProcessors = new ArrayList<>();
+    Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException;
 
-    public void addBeanPostProcessor(AutowiredAnnotationBeanPostProcessor beanPostProcessor) {
-        this.beanPostProcessors.remove(beanPostProcessor);
-        this.beanPostProcessors.add(beanPostProcessor);
-    }
+    Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException;
 
-    public int getBeanPostProcessorCount() {
-        return this.beanPostProcessors.size();
-    }
-
-    public List<AutowiredAnnotationBeanPostProcessor> getBeanPostProcessors() {
-        return this.beanPostProcessors;
-    }
-
-    /**
-     * <p>
-     * bean 初始化前的一些处理回调
-     * </p>
-     *
-     * @param existingBean
-     * @param beanName
-     * @return java.lang.Object
-     */
-    @Override
-    public Object applyBeanPostProcessorBeforeInitialization(Object existingBean, String beanName) throws BeansException {
-        Object result = existingBean;
-        for (AutowiredAnnotationBeanPostProcessor beanPostProcessor : beanPostProcessors) {
-            beanPostProcessor.setBeanFactory(this);
-            result = beanPostProcessor.postProcessBeforeInitialization(result, beanName);
-            if (null != result) {
-                return result;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * <p>
-     * bean 初始化后的一些处理回调
-     * </p>
-     *
-     * @param existingBean
-     * @param beanName
-     * @return java.lang.Object
-     */
-    @Override
-    public Object applyBeanPostProcessorAfterInitialization(Object existingBean, String beanName) throws BeansException {
-        Object result = existingBean;
-        for (AutowiredAnnotationBeanPostProcessor beanPostProcessor : beanPostProcessors) {
-            result = beanPostProcessor.postProcessAfterInitialization(result, beanName);
-            if (null != result) {
-                return result;
-            }
-        }
-        return result;
-    }
 }
 
