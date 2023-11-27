@@ -1,7 +1,7 @@
 package com.ant;
 
 import com.ant.minis.beans.BeansException;
-import com.ant.minis.context.ClassPathXmlApplicationContext;
+import com.ant.minis.beans.factory.support.ClassPathXmlApplicationContext;
 import com.ant.test.AService;
 
 public class Main {

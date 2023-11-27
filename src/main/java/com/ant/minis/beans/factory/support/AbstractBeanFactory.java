@@ -100,6 +100,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         try {
             method = clz.getMethod(beanDefinition.getInitMethodName());
         } catch (Exception e) {}
+
         try {
             method.invoke(obj);
         } catch (Exception e) {}
@@ -387,6 +388,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param existingBean
      * @param beanName
      * @return java.lang.Object
+     * @throws BeansException
      */
     abstract public Object applyBeanPostProcessorBeforeInitialization(Object existingBean, String beanName) throws BeansException;
 

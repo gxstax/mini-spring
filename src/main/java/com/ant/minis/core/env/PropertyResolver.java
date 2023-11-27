@@ -22,6 +22,8 @@ public interface PropertyResolver {
      * @see #getProperty(String, String)
      * @see #getProperty(String, Class)
      * @see #getRequiredProperty(String)
+     *
+     * @return
      */
     String getProperty(String key);
 
@@ -32,6 +34,8 @@ public interface PropertyResolver {
      * @param defaultValue the default value to return if no value is found
      * @see #getRequiredProperty(String)
      * @see #getProperty(String, Class)
+     *
+     * @return
      */
     String getProperty(String key, String defaultValue);
 
@@ -41,6 +45,8 @@ public interface PropertyResolver {
      * @param key the property name to resolve
      * @param targetType the expected type of the property value
      * @see #getRequiredProperty(String, Class)
+     *
+     * @return
      */
     <T> T getProperty(String key, Class<T> targetType);
 
@@ -51,6 +57,8 @@ public interface PropertyResolver {
      * @param targetType the expected type of the property value
      * @param defaultValue the default value to return if no value is found
      * @see #getRequiredProperty(String, Class)
+     *
+     * @return
      */
     <T> T getProperty(String key, Class<T> targetType, T defaultValue);
 
@@ -58,6 +66,8 @@ public interface PropertyResolver {
      * Return the property value associated with the given key (never {@code null}).
      * @throws IllegalStateException if the key cannot be resolved
      * @see #getRequiredProperty(String, Class)
+     *
+     * @return
      */
     String getRequiredProperty(String key) throws IllegalStateException;
 
@@ -65,11 +75,15 @@ public interface PropertyResolver {
      * Return the property value associated with the given key, converted to the given
      * targetType (never {@code null}).
      * @throws IllegalStateException if the given key cannot be resolved
+     *
+     * @return
      */
     <T> T getRequiredProperty(String key, Class<T> targetType) throws IllegalStateException;
 
     /**
-     * 处理占位符
+     * 解析占位符
+     *
+     * @return
      */
     String resolvePlaceholders(String text);
 
@@ -77,10 +91,12 @@ public interface PropertyResolver {
      * Resolve ${...} placeholders in the given text, replacing them with corresponding
      * property values as resolved by {@link #getProperty}. Unresolvable placeholders with
      * no default value will cause an IllegalArgumentException to be thrown.
+     *
      * @return the resolved String (never {@code null})
      * @throws IllegalArgumentException if given text is {@code null}
      * or if any placeholders are unresolvable
      * @see org.springframework.util.SystemPropertyUtils#resolvePlaceholders(String, boolean)
+     *
      */
     String resolveRequiredPlaceholders(String text) throws IllegalArgumentException;
 }

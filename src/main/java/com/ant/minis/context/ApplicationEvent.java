@@ -5,7 +5,7 @@ import java.util.EventObject;
 
 /**
  * <p>
- * 所有应用时间的超类
+ * 所有应用事件的超类
  * </p>
  *
  * @author Ant
@@ -15,6 +15,8 @@ public class ApplicationEvent extends EventObject {
 
     private static final long serialVersionUID = 1L;
 
+    protected String msg = null;
+
     /**
      * Constructs a prototypical Event.
      *
@@ -23,6 +25,7 @@ public class ApplicationEvent extends EventObject {
      */
     public ApplicationEvent(Object source) {
         super(source);
+        this.msg = source.toString();
     }
 }
 
