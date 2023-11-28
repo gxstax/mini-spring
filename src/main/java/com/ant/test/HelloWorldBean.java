@@ -11,7 +11,7 @@ package com.ant.test;
 public class HelloWorldBean {
 
     public String doGet() {
-        return "hello world!";
+        return "hello world! doGet()";
     }
 
     public String doPost() {
