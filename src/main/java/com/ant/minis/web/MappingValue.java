@@ -5,7 +5,7 @@ package com.ant.minis.web;
  *
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/27 18:05
  */
 public class MappingValue {

@@ -1,5 +1,7 @@
 package com.ant.test;
 
+import com.ant.minis.web.RequestMapping;
+
 /**
  * <p>
  *
@@ -10,11 +12,16 @@ package com.ant.test;
  */
 public class HelloWorldBean {
 
+    @RequestMapping("/test")
+    public String doTest() {
+        return "hello world for doTest!";
+    }
+
     public String doGet() {
-        return "hello world! doGet()";
+        return "hello world for doGet!";
     }
 
     public String doPost() {
-        return "hello world!";
+        return "hello world for doPost!";
     }
 }
