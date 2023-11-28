@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Ant
  * @since 2023/4/5 23:46
  **/
-@Slf4j
+//@Slf4j
 public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
 
@@ -199,7 +199,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
      * @param obj
      */
     private void handleProperties(BeanDefinition bd, Class<?> clz, Object obj) {
-        log.info("handle properties for bean :" + bd.getId());
+
         // 处理属性
         PropertyValues propertyValues = bd.getPropertyValues();
         if (!propertyValues.isEmpty()) {

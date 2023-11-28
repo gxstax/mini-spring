@@ -1,6 +1,7 @@
 package com.ant.minis.web;
 
 import com.ant.minis.core.io.Resource;
+import com.ant.minis.web.context.WebApplicationContext;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -57,8 +58,12 @@ public class DispatcherServlet extends HttpServlet {
     private Map<String, MappingValue> mappingValues;
     private Map<String, Class<?>> mappingClz = new HashMap<>();
 
+    private WebApplicationContext webApplicationContext;
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        this.webApplicationContext = (WebApplicationContext) this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+
         sContextConfigLocation = config.getInitParameter("contextConfigLocation");
 
         URL xmlPath = null;
@@ -153,24 +158,6 @@ public class DispatcherServlet extends HttpServlet {
                     }
                 }
             }
-        }
-    }
-
-    //对所有的mappingValues中注册的类进行实例化，默认构造函数
-    protected void Refresh() {
-        for (Map.Entry<String,MappingValue> entry : mappingValues.entrySet()) {
-            String id = entry.getKey();
-            String className = entry.getValue().getClz();
-            Object obj = null;
-            Class<?> clz = null;
-            try {
-                clz = Class.forName(className);
-                obj = clz.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            mappingClz.put(id, clz);
-            mappingObjs.put(id, obj);
         }
     }
 

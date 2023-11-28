@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
  * @author Ant
  * @since 2023/4/5 23:41
  **/
-@Slf4j
+//@Slf4j
 public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
     private AutowireCapableBeanFactory beanFactory;
 
@@ -47,7 +47,7 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
                     try {
                         field.setAccessible(true);
                         field.set(bean, autowiredObj);
-                        log.info("autowire {} for bean {}", fieldName, beanName);
+//                        log.info("autowire {} for bean {}", fieldName, beanName);
                     } catch (Exception e) {}
                 }
             }
