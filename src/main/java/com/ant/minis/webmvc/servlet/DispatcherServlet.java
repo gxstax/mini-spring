@@ -1,16 +1,20 @@
-package com.ant.minis.web;
+package com.ant.minis.webmvc.servlet;
 
-import com.ant.minis.core.io.Resource;
+import com.ant.minis.beans.BeansException;
+import com.ant.minis.beans.factory.annotation.Autowired;
+import com.ant.minis.web.XmlScanComponentHelper;
 import com.ant.minis.web.context.WebApplicationContext;
-
+import com.ant.minis.web.context.support.AnnotationConfigWebApplicationContext;
+import com.ant.minis.web.method.HandlerMethod;
+import com.ant.minis.webmvc.mvc.RequestMappingHandlerAdapter;
+import com.ant.minis.webmvc.mvc.RequestMappingHandlerMapping;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -32,6 +36,9 @@ import java.util.Map;
 public class DispatcherServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
+    public static final String WEB_APPLICATION_CONTEXT_ATTRIBUTE = DispatcherServlet.class.getName() + ".CONTEXT";
+
+
     private String sContextConfigLocation;
 
     /** 用于存储需要扫描的 package 列表 */
@@ -46,23 +53,18 @@ public class DispatcherServlet extends HttpServlet {
     /** 用于存储 controller 名称与类的映射关系 */
     private Map<String, Class<?>> controllerClasses = new HashMap<>();
 
-    /** 保存自定义的 @RequestMapping 名称 （URL 的名称）的列表 */
-    private List urlMappingNames = new ArrayList<>();
-
-    /** 保存 URL 名称与对象的映射关系 */
-    private  Map<String, Object> mappingObjs = new HashMap<>();
-
-    /** 保存 URL 名称与方法的映射关系 */
-    private Map<String, Method> mappingMethods = new HashMap<>();
-
-    private Map<String, MappingValue> mappingValues;
-    private Map<String, Class<?>> mappingClz = new HashMap<>();
-
     private WebApplicationContext webApplicationContext;
+
+    private WebApplicationContext parentApplicationContext;
+
+    private HandlerMapping handlerMapping;
+
+    private HandlerAdapter handlerAdapter;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        this.webApplicationContext = (WebApplicationContext) this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
+        this.parentApplicationContext = (WebApplicationContext)
+                this.getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
 
         sContextConfigLocation = config.getInitParameter("contextConfigLocation");
 
@@ -76,6 +78,7 @@ public class DispatcherServlet extends HttpServlet {
 
         this.packageNames = XmlScanComponentHelper.getNodeValue(xmlPath);
 
+        this.webApplicationContext = new AnnotationConfigWebApplicationContext(sContextConfigLocation, this.parentApplicationContext);
         refresh();
     }
 
@@ -83,8 +86,17 @@ public class DispatcherServlet extends HttpServlet {
         // 初始化 controller
         initController();
 
-        // 初始化 url 映射
-        initMapping();
+        initHandlerMappings(this.webApplicationContext);
+
+        initHandlerAdapters(this.webApplicationContext);
+    }
+
+    protected void initHandlerMappings(WebApplicationContext wac) {
+        this.handlerMapping = new RequestMappingHandlerMapping(wac);
+    }
+
+    protected void initHandlerAdapters(WebApplicationContext wac) {
+        this.handlerAdapter = new RequestMappingHandlerAdapter(wac);
     }
 
     protected void initController() {
@@ -95,14 +107,33 @@ public class DispatcherServlet extends HttpServlet {
             Class<?> clz = null;
             try {
                 clz = Class.forName(controllerName);
-                this.controllerClasses.put(controllerName, clz);
+                obj = clz.newInstance();
             } catch (Exception e) {}
+            this.controllerClasses.put(controllerName, clz);
 
             try {
                 // 实例化bean
-                obj = clz.newInstance();
+                populateBean(obj);
                 this.controllerObjs.put(controllerName, obj);
             } catch (Exception e) {}
+        }
+    }
+
+    private void populateBean(Object bean) throws BeansException {
+        Class<?> clz = bean.getClass();
+        Field[] fields = clz.getDeclaredFields();
+        for (Field field : fields) {
+            boolean isAutowired = field.isAnnotationPresent(Autowired.class);
+            if (isAutowired) {
+                String fieldName = field.getName();
+                Object autowiredBean = this.webApplicationContext.getBean(fieldName);
+                field.setAccessible(true);
+                try {
+                    field.set(bean, autowiredBean);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -137,43 +168,34 @@ public class DispatcherServlet extends HttpServlet {
         return tempControllerNames;
     }
 
-    protected void initMapping() {
-        for (String controllerName : this.controllerNames) {
-            Class<?> clazz = this.controllerClasses.get(controllerName);
-            Object obj = this.controllerObjs.get(controllerName);
-            Method[] methods = clazz.getDeclaredMethods();
-            if (methods != null) {
-                for (Method method : methods) {
-                    //检查所有的方法
-                    boolean isRequestMapping =
-                            method.isAnnotationPresent(RequestMapping.class);
-                    if (isRequestMapping) { //有RequestMapping注解
-                        String methodName = method.getName();
-                        //建立方法名和URL的映射
-                        String urlMapping =
-                                method.getAnnotation(RequestMapping.class).value();
-                        this.urlMappingNames.add(urlMapping);
-                        this.mappingObjs.put(urlMapping, obj);
-                        this.mappingMethods.put(urlMapping, method);
-                    }
-                }
-            }
+    protected void service(HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute(WEB_APPLICATION_CONTEXT_ATTRIBUTE, this.webApplicationContext);
+
+        try {
+            doDispatch(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String sPath = request.getServletPath();
-        if (!this.urlMappingNames.contains(sPath)) {
+    /***
+     * <p>
+     * 请求调度
+     * </p>
+     *
+     * @param request
+     * @param response
+     * @return void
+     */
+    private void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpServletRequest processedRequest = request;
+        HandlerMethod handlerMethod = this.handlerMapping.getHandler(processedRequest);
+        if (null == handlerMethod) {
             return;
         }
-        Object obj;
-        Object objResult = null;
-        try {
-            Method method = this.mappingMethods.get(sPath);
-            obj = this.mappingObjs.get(sPath);
-            objResult = method.invoke(obj);
-        } catch (Exception e) {
-        }
-        response.getWriter().append(objResult.toString());
+
+        HandlerAdapter handlerAdapter = this.handlerAdapter;
+        handlerAdapter.handle(request, response, handlerMethod);
     }
+
 }

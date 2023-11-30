@@ -1,6 +1,7 @@
 package com.ant.minis.web.context;
 
 import com.ant.minis.web.context.support.AnnotationConfigWebApplicationContext;
+import com.ant.minis.web.context.support.XmlWebApplicationContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -38,7 +39,7 @@ public class ContextLoaderListener implements ServletContextListener {
 
     private void initWebApplicationContext(ServletContext servletContext) {
         String sContextLocation = servletContext.getInitParameter(CONFIG_LOCATION_PARAM);
-        WebApplicationContext wac = new AnnotationConfigWebApplicationContext(sContextLocation);
+        WebApplicationContext wac = new XmlWebApplicationContext(sContextLocation);
         wac.setServletContext(servletContext);
         this.context = wac;
 

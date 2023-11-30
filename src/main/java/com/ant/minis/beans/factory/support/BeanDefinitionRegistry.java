@@ -50,4 +50,5 @@ public interface BeanDefinitionRegistry {
      * @return boolean
      */
     boolean containsBeanDefinition(String beanName);
+
 }

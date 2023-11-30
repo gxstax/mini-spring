@@ -30,7 +30,7 @@ public interface BeanFactory {
      * @param name
      * @return java.lang.Boolean
      */
-    Boolean containsBean(String name);
+    boolean containsBean(String name);
 
     /**
      * <p>
@@ -61,5 +61,6 @@ public interface BeanFactory {
      * @return java.lang.Class<?>
      */
     Class<?> getType(String name) throws BeansException;
+
 }
 

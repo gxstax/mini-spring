@@ -2,14 +2,12 @@ package com.ant.minis.beans.factory.xml;
 
 
 import com.ant.minis.beans.*;
-import com.ant.minis.beans.factory.SimpleBeanFactory;
-import com.ant.minis.beans.factory.config.AutowireCapableBeanFactory;
 import com.ant.minis.beans.factory.config.ConstructorArgumentValue;
 import com.ant.minis.beans.factory.config.ConstructorArgumentValues;
 import com.ant.minis.beans.factory.config.BeanDefinition;
+import com.ant.minis.beans.factory.support.AbstractBeanFactory;
 import com.ant.minis.core.io.Resource;
 import org.dom4j.Element;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +20,10 @@ import java.util.List;
  * @since 2023/3/16 01:08
  **/
 public class XmlBeanDefinitionReader {
-    private AutowireCapableBeanFactory simpleBeanFactory;
+    private AbstractBeanFactory beanFactory;
 
-    public XmlBeanDefinitionReader(AutowireCapableBeanFactory simpleBeanFactory) {
-        this.simpleBeanFactory = simpleBeanFactory;
+    public XmlBeanDefinitionReader(AbstractBeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
     /**
@@ -38,48 +36,50 @@ public class XmlBeanDefinitionReader {
     public void loadBeanDefinitions(Resource resource) {
         while (resource.hasNext()) {
             Element element = (Element) resource.next();
-            String beanId = element.attributeValue("id");
+            String beanID = element.attributeValue("id");
             String beanClassName = element.attributeValue("class");
-            BeanDefinition beanDefinition = new BeanDefinition(beanId, beanClassName);
 
-            List<String> refs = new ArrayList<>();
-            PropertyValues PVS = new PropertyValues();
+            BeanDefinition beanDefinition = new BeanDefinition(beanID, beanClassName);
+
+            //get constructor
+            List<Element> constructorElements = element.elements("constructor-arg");
+            ArgumentValues AVS = new ArgumentValues();
+            for (Element e : constructorElements) {
+                String pType = e.attributeValue("type");
+                String pName = e.attributeValue("name");
+                String pValue = e.attributeValue("value");
+                AVS.addArgumentValue(new ArgumentValue(pType, pName, pValue));
+            }
+            beanDefinition.setArgumentValues(AVS);
+            //end of handle constructor
+
+            //handle properties
             List<Element> propertyElements = element.elements("property");
-            for (Element propertyElement : propertyElements) {
-                String type = propertyElement.attributeValue("type");
-                String name = propertyElement.attributeValue("name");
-                String pValue = propertyElement.attributeValue("value");
-                String pRef = propertyElement.attributeValue("ref");
+            PropertyValues PVS = new PropertyValues();
+            List<String> refs = new ArrayList<>();
+            for (Element e : propertyElements) {
+                String pType = e.attributeValue("type");
+                String pName = e.attributeValue("name");
+                String pValue = e.attributeValue("value");
+                String pRef = e.attributeValue("ref");
                 String pV = "";
                 boolean isRef = false;
-                if (null != pValue && !pValue.isEmpty()) {
+                if (pValue != null && !pValue.equals("")) {
+                    isRef = false;
                     pV = pValue;
-                } else if (null != pRef) {
+                } else if (pRef != null && !pRef.equals("")) {
                     isRef = true;
                     pV = pRef;
                     refs.add(pRef);
                 }
-                PVS.addPropertyValue(new PropertyValue(type, name, pV, isRef));
+                PVS.addPropertyValue(new PropertyValue(pType, pName, pV, isRef));
             }
             beanDefinition.setPropertyValues(PVS);
             String[] refArray = refs.toArray(new String[0]);
             beanDefinition.setDependsOn(refArray);
+            //end of handle properties
 
-            // 处理构造器函数
-            int i = 0;
-            ConstructorArgumentValues AVS = new ConstructorArgumentValues();
-            List<Element> constructorElements = element.elements("constructor-arg");
-            for (Element constructorElement : constructorElements) {
-                String type = constructorElement.attributeValue("type");
-                String name = constructorElement.attributeValue("name");
-                String value = constructorElement.attributeValue("value");
-                ConstructorArgumentValue constructorArgumentValue = new ConstructorArgumentValue(value, type, name);
-                AVS.addGenericArgumentValue(constructorArgumentValue);
-                AVS.addIndexedArgumentValues(i++, constructorArgumentValue);
-            }
-            beanDefinition.setConstructorArgumentValues(AVS);
-
-//            this.simpleBeanFactory.registerBeanDefinition(beanId, beanDefinition);
+            this.beanFactory.registerBeanDefinition(beanID, beanDefinition);
         }
     }
 }

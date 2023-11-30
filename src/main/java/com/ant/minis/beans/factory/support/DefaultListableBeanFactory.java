@@ -23,18 +23,24 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
         implements ConfigurableListableBeanFactory {
 
-    /** Map of bean definition objects, keyed by bean name */
-    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
+//    /** Map of bean definition objects, keyed by bean name */
+//    private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
 
-    /** List of bean definition names, in registration order */
-    private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
+//    /** List of bean definition names, in registration order */
+//    private volatile List<String> beanDefinitionNames = new ArrayList<>(256);
+
+    ConfigurableListableBeanFactory parentBeanFactory;
+
+    public void setParent(ConfigurableListableBeanFactory beanFactory) {
+        this.parentBeanFactory = beanFactory;
+    }
 
     public int getBeanDefinitionCount() {
         return this.beanDefinitionMap.size();
     }
 
     public String[] getBeanDefinitionNames() {
-        return (String[]) this.beanDefinitionNames.toArray();
+        return this.beanDefinitionNames.toArray(new String[this.beanDefinitionNames.size()]);
     }
 
     public String[] getBeanNamesForType(Class<?> type) {
@@ -68,37 +74,37 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
         return result;
     }
 
-    /**
-     * Apply {@link BeanPostProcessor BeanPostProcessors} to the given existing bean
-     * instance, invoking their {@code postProcessBeforeInitialization} methods.
-     * The returned bean instance may be a wrapper around the original.
-     *
-     * @param existingBean the new bean instance
-     * @param beanName     the name of the bean
-     * @return the bean instance to use, either the original or a wrapped one
-     * @throws BeansException if any post-processing failed
-     * @see BeanPostProcessor#postProcessBeforeInitialization
-     */
-    @Override
-    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
-        return null;
-    }
-
-    /**
-     * Apply {@link BeanPostProcessor BeanPostProcessors} to the given existing bean
-     * instance, invoking their {@code postProcessAfterInitialization} methods.
-     * The returned bean instance may be a wrapper around the original.
-     *
-     * @param existingBean the new bean instance
-     * @param beanName     the name of the bean
-     * @return the bean instance to use, either the original or a wrapped one
-     * @throws BeansException if any post-processing failed
-     * @see BeanPostProcessor#postProcessAfterInitialization
-     */
-    @Override
-    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException {
-        return null;
-    }
+//    /**
+//     * Apply {@link BeanPostProcessor BeanPostProcessors} to the given existing bean
+//     * instance, invoking their {@code postProcessBeforeInitialization} methods.
+//     * The returned bean instance may be a wrapper around the original.
+//     *
+//     * @param existingBean the new bean instance
+//     * @param beanName     the name of the bean
+//     * @return the bean instance to use, either the original or a wrapped one
+//     * @throws BeansException if any post-processing failed
+//     * @see BeanPostProcessor#postProcessBeforeInitialization
+//     */
+//    @Override
+//    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
+//        return null;
+//    }
+//
+//    /**
+//     * Apply {@link BeanPostProcessor BeanPostProcessors} to the given existing bean
+//     * instance, invoking their {@code postProcessAfterInitialization} methods.
+//     * The returned bean instance may be a wrapper around the original.
+//     *
+//     * @param existingBean the new bean instance
+//     * @param beanName     the name of the bean
+//     * @return the bean instance to use, either the original or a wrapped one
+//     * @throws BeansException if any post-processing failed
+//     * @see BeanPostProcessor#postProcessAfterInitialization
+//     */
+//    @Override
+//    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException {
+//        return null;
+//    }
 
     /**
      * 新增一个在 Bean工厂创建 bean 过程中被执行的后置处理器。在工厂配置期间调用

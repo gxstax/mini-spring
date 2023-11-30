@@ -61,19 +61,19 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
     }
 
     @Override
-    void registerListeners() {
+    public void registerListeners() {
         ApplicationListener listener = new ApplicationListener();
         this.getApplicationEventPublisher().addApplicationListener(listener);
     }
 
     @Override
-    void initApplicationEventPublisher() {
+    public void initApplicationEventPublisher() {
         ApplicationEventPublisher aep = new SimpleApplicationEventPublisher();
         this.setApplicationEventPublisher(aep);
     }
 
     @Override
-    void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) { }
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) { }
 
     /**
      * <p>
@@ -96,11 +96,13 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
         this.beanFactoryPostProcessors.add(postProcessor);
     }
 
-    @Override void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+    @Override
+    public void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
         this.beanFactory.addBeanPostProcessor(new AutowiredAnnotationBeanPostProcessor());
     }
 
-    @Override void onRefresh() {
+    @Override
+    public void onRefresh() {
         this.beanFactory.refresh();
     }
 
@@ -109,7 +111,8 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
         return this.beanFactory;
     }
 
-    @Override void finishRefresh() {
+    @Override
+    public void finishRefresh() {
         publishEvent(new ContextRefreshEvent("Context Refreshed..."));
     }
 
@@ -124,7 +127,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
      * @param name  指定的beanName
      * @return 是否存在指定name的Bean
      */
-    public Boolean containsBean(String name) {
+    public boolean containsBean(String name) {
         return this.beanFactory.containsBean(name);
     }
 
@@ -164,7 +167,7 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
      * @return java.lang.Class<?>
      */
     @Override
-    public Class<?> getType(String name) throws BeansException {
+    public Class<?> getType(String name) {
         return beanFactory.getType(name);
     }
 

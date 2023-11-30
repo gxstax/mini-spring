@@ -38,6 +38,30 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
         return getBeanFactory().getBean(beanName);
     }
 
+    @Override
+    public boolean containsBean(String name) {
+        return getBeanFactory().containsBean(name);
+    }
+
+//	public void registerBean(String beanName, Object obj) {
+//		getBeanFactory().registerBean(beanName, obj);
+//	}
+
+    @Override
+    public boolean isSingleton(String name) {
+        return getBeanFactory().isSingleton(name);
+    }
+
+    @Override
+    public boolean isPrototype(String name) {
+        return getBeanFactory().isPrototype(name);
+    }
+
+    @Override
+    public Class<?> getType(String name) throws BeansException{
+        return getBeanFactory().getType(name);
+    }
+
     public void refresh() throws BeansException, IllegalStateException {
         postProcessBeanFactory(getBeanFactory());
 
@@ -56,17 +80,17 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
      * Add beans that implement ApplicationListener as listeners.
      * Doesn't affect other listeners, which can be added without being beans.
      */
-    abstract void registerListeners();
+    public abstract void registerListeners();
 
-    abstract void initApplicationEventPublisher();
+    public abstract void initApplicationEventPublisher();
 
-    abstract void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory);
+    public abstract void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory);
 
-    abstract void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory);
+    public abstract void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory);
 
-    abstract void onRefresh();
+    public abstract void onRefresh();
 
-    abstract void finishRefresh();
+    public abstract void finishRefresh();
 
     @Override
     public void registerSingleton(String beanName, Object singletonObject) {
@@ -144,10 +168,12 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     public String getApplicationName() {
         return "";
     }
+
     @Override
     public long getStartupDate() {
         return this.startupDate;
     }
+
     @Override
     public abstract ConfigurableListableBeanFactory getBeanFactory() throws IllegalStateException;
 
