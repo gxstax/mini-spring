@@ -1,6 +1,6 @@
 package com.ant.minis.webmvc.mvc;
 
-import com.ant.minis.web.RequestMapping;
+import com.ant.minis.web.bind.annotation.RequestMapping;
 import com.ant.minis.web.context.WebApplicationContext;
 import com.ant.minis.web.method.HandlerMethod;
 import com.ant.minis.webmvc.servlet.HandlerMapping;

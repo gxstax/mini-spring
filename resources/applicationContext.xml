@@ -16,5 +16,26 @@
 		<property type="com.ant.test.service.BaseBaseService" name="bbs" ref="baseBaseService" />
 	</bean>
 
+	<bean id="handlerAdapter" class="com.ant.minis.webmvc.mvc.RequestMappingHandlerAdapter">
+		<property type="com.ant.minis.web.converter.HttpMessageConverter" name="messageConverter" ref="messageConverter"/>
+		<property type="com.ant.minis.web.bind.support.WebBindingInitializer" name="webBindingInitializer" ref="webBindingInitializer"/>
+	</bean>
+
+	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
+
+	<bean id="messageConverter" class="com.ant.minis.web.converter.DefaultHttpMessageConverter">
+		<property type="com.ant.minis.web.converter.ObjectMapper" name="objectMapper" ref="objectMapper"/>
+	</bean>
+	<bean id="objectMapper" class="com.ant.minis.web.converter.DefaultObjectMapper" >
+		<property type="String" name="dateFormat" value="yyyy/MM/dd"/>
+		<property type="String" name="decimalFormat" value="###.##"/>
+	</bean>
+
+
+	<bean id="viewResolver" class="com.ant.minis.webmvc.servlet.view.InternalResourceViewResolver" >
+		<property type="String" name="viewClassName" value="com.ant.minis.webmvc.servlet.view.JstlView" />
+		<property type="String" name="prefix" value="/jsp/" />
+		<property type="String" name="suffix" value=".jsp" />
+	</bean>
 	
 </beans>

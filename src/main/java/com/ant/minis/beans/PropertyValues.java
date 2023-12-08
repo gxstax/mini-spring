@@ -3,6 +3,7 @@ package com.ant.minis.beans;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -17,6 +18,14 @@ public class PropertyValues {
 
     public PropertyValues() {
         this.propertyValueList = new ArrayList<>(0);
+    }
+
+    public PropertyValues(Map<String, Object> map) {
+        this.propertyValueList = new ArrayList<PropertyValue>(10);
+        for (Map.Entry<String,Object> e: map.entrySet()) {
+            PropertyValue pv = new PropertyValue(e.getKey(), e.getValue());
+            this.propertyValueList.add(pv);
+        }
     }
 
     /**
@@ -73,6 +82,17 @@ public class PropertyValues {
      */
     public void removePropertyValue(String propertyName) {
         this.propertyValueList.remove(getPropertyValue(propertyName));
+    }
+
+    /**
+     * <p>
+     * 获取属性值数组
+     * </p>
+     *
+     * @return com.ant.minis.beans.PropertyValue[]
+     */
+    public PropertyValue[] getPropertyValues() {
+        return this.propertyValueList.toArray(new PropertyValue[this.propertyValueList.size()]);
     }
 
     private PropertyValue getPropertyValue(String propertyName) {

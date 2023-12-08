@@ -1,4 +1,4 @@
-package com.ant.minis.web;
+package com.ant.minis.web.bind.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
