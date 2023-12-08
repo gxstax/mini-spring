@@ -15,7 +15,7 @@ import com.ant.minis.core.env.EnvironmentCapable;
  * reloaded if the implementation supports this.
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/23 17:19
  */
 public interface ApplicationContext

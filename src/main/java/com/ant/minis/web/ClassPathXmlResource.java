@@ -14,7 +14,7 @@ import java.util.Iterator;
  *
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/27 18:54
  */
 public class ClassPathXmlResource implements Resource {

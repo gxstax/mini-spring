@@ -8,7 +8,7 @@ import java.util.List;
  *
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/23 17:10
  */
 public class SimpleApplicationEventPublisher implements ApplicationEventPublisher {

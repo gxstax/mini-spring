@@ -6,7 +6,7 @@ package com.ant.minis.context;
  *
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/23 17:04
  */
 public class ContextRefreshEvent extends ApplicationEvent{

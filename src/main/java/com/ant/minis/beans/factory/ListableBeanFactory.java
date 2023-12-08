@@ -9,7 +9,7 @@ import java.util.Map;
  * {@link BeanFactory} 接口扩展
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/27 11:21
  */
 public interface ListableBeanFactory extends BeanFactory {

@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  * </p>
  *
- * @author GaoXin
+ * @author Ant
  * @since 2023/11/27 15:03
  */
 public abstract class AbstractApplicationContext implements ApplicationContext {
