@@ -1,6 +1,7 @@
 package com.ant.minis.beans.factory.config;
 
 import com.ant.minis.beans.BeansException;
+import com.ant.minis.beans.factory.BeanFactory;
 
 /**
  * <p>
@@ -37,4 +38,7 @@ public interface BeanPostProcessor {
     default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
+
+    void setBeanFactory(BeanFactory beanFactory);
+
 }

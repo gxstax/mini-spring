@@ -12,8 +12,28 @@
 		<property type="com.ant.test.service.BaseService" name="ref1" ref="baseService"/>
 	</bean>
 
-	<bean id="baseService" class="com.ant.test.service.BaseService">
-		<property type="com.ant.test.service.BaseBaseService" name="bbs" ref="baseBaseService" />
+	<bean id="baseservice" class="com.ant.test.service.BaseService" />
+	<bean id="userService" class="com.ant.test.service.UserService" />
+
+	<bean id="handlerMapping" class="com.ant.minis.webmvc.mvc.RequestMappingHandlerMapping"/>
+
+	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
+
+
+
+	<bean id="objectMapper" class="com.ant.minis.web.converter.DefaultObjectMapper" >
+		<property type="String" name="dateFormat" value="yyyy/MM/dd"/>
+		<property type="String" name="decimalFormat" value="###.##"/>
+	</bean>
+
+	<bean id="viewResolver" class="com.ant.minis.webmvc.servlet.view.InternalResourceViewResolver" >
+		<property type="String" name="viewClassName" value="com.ant.minis.webmvc.servlet.view.JstlView" />
+		<property type="String" name="prefix" value="/jsp/" />
+		<property type="String" name="suffix" value=".jsp" />
+	</bean>
+
+	<bean id="messageConverter" class="com.ant.minis.web.converter.DefaultHttpMessageConverter">
+		<property type="com.ant.minis.web.converter.ObjectMapper" name="objectMapper" ref="objectMapper"/>
 	</bean>
 
 	<bean id="handlerAdapter" class="com.ant.minis.webmvc.mvc.RequestMappingHandlerAdapter">
@@ -21,21 +41,17 @@
 		<property type="com.ant.minis.web.bind.support.WebBindingInitializer" name="webBindingInitializer" ref="webBindingInitializer"/>
 	</bean>
 
-	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
+	<!-- 数据源 -->
+<!--	<bean id="dataSource" class="com.ant.minis.jdbc.datasource.SingleConnectionDataSource">-->
+<!--		<property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>-->
+<!--		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test"/>-->
+<!--		<property type="String" name="username" value="root"/>-->
+<!--		<property type="String" name="password" value="mixc@mixc"/>-->
+<!--	</bean>-->
+<!--	<bean id="jdbcTemplate" class="com.ant.minis.jdbc.core.JdbcTemplate" >-->
+<!--		<property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>-->
+<!--	</bean>-->
 
-	<bean id="messageConverter" class="com.ant.minis.web.converter.DefaultHttpMessageConverter">
-		<property type="com.ant.minis.web.converter.ObjectMapper" name="objectMapper" ref="objectMapper"/>
-	</bean>
-	<bean id="objectMapper" class="com.ant.minis.web.converter.DefaultObjectMapper" >
-		<property type="String" name="dateFormat" value="yyyy/MM/dd"/>
-		<property type="String" name="decimalFormat" value="###.##"/>
-	</bean>
 
 
-	<bean id="viewResolver" class="com.ant.minis.webmvc.servlet.view.InternalResourceViewResolver" >
-		<property type="String" name="viewClassName" value="com.ant.minis.webmvc.servlet.view.JstlView" />
-		<property type="String" name="prefix" value="/jsp/" />
-		<property type="String" name="suffix" value=".jsp" />
-	</bean>
-	
 </beans>

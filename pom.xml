@@ -63,6 +63,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.6</version>
+        </dependency>
+
+
 
     </dependencies>
 

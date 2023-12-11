@@ -2,6 +2,7 @@ package com.ant.minis.beans.factory.annotation;
 
 
 import com.ant.minis.beans.BeansException;
+import com.ant.minis.beans.factory.BeanFactory;
 import com.ant.minis.beans.factory.config.AutowireCapableBeanFactory;
 import com.ant.minis.beans.factory.config.BeanPostProcessor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import java.lang.reflect.Field;
  **/
 //@Slf4j
 public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
-    private AutowireCapableBeanFactory beanFactory;
+    private BeanFactory beanFactory;
 
     /**
      * <p>
@@ -69,11 +70,11 @@ public class AutowiredAnnotationBeanPostProcessor implements BeanPostProcessor {
         return BeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
     }
 
-    public AutowireCapableBeanFactory getBeanFactory() {
+    public BeanFactory getBeanFactory() {
         return beanFactory;
     }
 
-    public void setBeanFactory(AutowireCapableBeanFactory beanFactory) {
+    public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 }

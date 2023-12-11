@@ -1,8 +1,5 @@
 package com.ant.minis.web.converter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,11 +18,13 @@ public class DefaultHttpMessageConverter implements HttpMessageConverter {
     String defaultCharacterEncoding = "UTF-8";
     ObjectMapper objectMapper;
 
+    public DefaultHttpMessageConverter() {}
+
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }
 
-    public void setObjectMapper() {
+    public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
@@ -38,7 +37,7 @@ public class DefaultHttpMessageConverter implements HttpMessageConverter {
     }
 
     private void writeInternal(Object obj, HttpServletResponse response) throws IOException {
-        String sJsonStr = this.objectMapper.writeValueAsString(obj);
+        String sJsonStr = this.objectMapper.writeValuesAsString(obj);
         PrintWriter pw = response.getWriter();
         pw.write(sJsonStr);
     }

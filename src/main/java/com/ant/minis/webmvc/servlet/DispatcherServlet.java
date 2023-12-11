@@ -62,6 +62,9 @@ public class DispatcherServlet extends HttpServlet {
 
     private HandlerAdapter handlerAdapter;
 
+    private ViewResolver viewResolver;
+
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.parentApplicationContext = (WebApplicationContext)
@@ -198,13 +201,43 @@ public class DispatcherServlet extends HttpServlet {
      */
     private void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpServletRequest processedRequest = request;
-        HandlerMethod handlerMethod = this.handlerMapping.getHandler(processedRequest);
-        if (null == handlerMethod) {
+        HandlerMethod handlerMethod = null;
+        ModelAndView mv = null;
+
+        handlerMethod = this.handlerMapping.getHandler(processedRequest);
+        if (handlerMethod == null) {
             return;
         }
 
-        HandlerAdapter handlerAdapter = this.handlerAdapter;
-        handlerAdapter.handle(request, response, handlerMethod);
+        HandlerAdapter ha = this.handlerAdapter;
+
+        mv = ha.handle(processedRequest, response, handlerMethod);
+
+        render(processedRequest, response, mv);
     }
 
+    protected void render( HttpServletRequest request, HttpServletResponse response,ModelAndView mv) throws Exception {
+        if (mv == null) {
+            response.getWriter().flush();
+            response.getWriter().close();
+            return;
+        }
+
+        String sTarget = mv.getViewName();
+        Map<String, Object> modelMap = mv.getModel();
+        View view = resolveViewName(sTarget, modelMap, request);
+        view.render(modelMap, request, response);
+
+    }
+
+    protected View resolveViewName(String viewName, Map<String, Object> model,
+                                   HttpServletRequest request) throws Exception {
+        if (this.viewResolver != null) {
+            View view = viewResolver.resolveViewName(viewName);
+            if (view != null) {
+                return view;
+            }
+        }
+        return null;
+    }
 }

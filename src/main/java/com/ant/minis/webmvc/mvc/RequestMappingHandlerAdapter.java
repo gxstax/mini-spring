@@ -32,6 +32,8 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter {
     WebBindingInitializer webBindingInitializer;
     private HttpMessageConverter messageConverter = null;
 
+    public RequestMappingHandlerAdapter() {}
+
     public RequestMappingHandlerAdapter(WebApplicationContext wac) {
         this.wac = wac;
         try {
@@ -42,49 +44,68 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter {
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        handleInternal(request, response, (HandlerMethod) handler);
+    public ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
+        return handleInternal(request, response, (HandlerMethod) handler);
     }
 
-    private void handleInternal(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) {
+    private ModelAndView handleInternal(HttpServletRequest request, HttpServletResponse response,
+                                        HandlerMethod handler) {
+        ModelAndView mv = null;
+
         try {
-            invokeHandlerMethod(request, response, handler);
+            mv = invokeHandlerMethod(request, response, handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return mv;
+
     }
 
-    protected ModelAndView invokeHandlerMethod(HttpServletRequest request, HttpServletResponse response,
-                                               HandlerMethod handlerMethod) throws Exception {
-        ModelAndView mav = null;
-
-
+    protected ModelAndView invokeHandlerMethod(HttpServletRequest request,
+                                               HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
         WebDataBinderFactory binderFactory = new WebDataBinderFactory();
+
         Parameter[] methodParameters = handlerMethod.getMethod().getParameters();
-
         Object[] methodParamObjs = new Object[methodParameters.length];
-        int i = 0;
 
-        // 对调用方法里的每一个参数，处理绑定
+        int i = 0;
         for (Parameter methodParameter : methodParameters) {
-            Object methodParamObj = methodParameter.getType().newInstance();
-            WebDataBinder wdb = binderFactory.createBinder(request, methodParamObj, methodParameter.getName());
-            wdb.bind(request);
-            methodParamObjs[i] = methodParamObj;
+            if (methodParameter.getType()!=HttpServletRequest.class && methodParameter.getType()!=HttpServletResponse.class) {
+                Object methodParamObj = methodParameter.getType().newInstance();
+                WebDataBinder wdb = binderFactory.createBinder(request, methodParamObj, methodParameter.getName());
+                webBindingInitializer.initBinder(wdb);
+                wdb.bind(request);
+                methodParamObjs[i] = methodParamObj;
+            }
+            else if (methodParameter.getType()==HttpServletRequest.class) {
+                methodParamObjs[i] = request;
+            }
+            else if (methodParameter.getType()==HttpServletResponse.class) {
+                methodParamObjs[i] = response;
+            }
             i++;
         }
 
         Method invocableMethod = handlerMethod.getMethod();
         Object returnObj = invocableMethod.invoke(handlerMethod.getBean(), methodParamObjs);
-        if (invocableMethod.isAnnotationPresent(ResponseBody.class)) {
+        Class<?> returnType = invocableMethod.getReturnType();
+
+        ModelAndView mav = null;
+        if (invocableMethod.isAnnotationPresent(ResponseBody.class)){ //ResponseBody
             this.messageConverter.write(returnObj, response);
-        } else {
-            // 返回前端页面
+        }
+        else if (returnType == void.class) {
+
+        }
+        else {
             if (returnObj instanceof ModelAndView) {
-                mav = (ModelAndView) returnObj;
-            } else if (returnObj instanceof String) {
-                String sTarget = (String) returnObj;
+                mav = (ModelAndView)returnObj;
+            }
+            else if(returnObj instanceof String) {
+                String sTarget = (String)returnObj;
                 mav = new ModelAndView();
                 mav.setViewName(sTarget);
             }
@@ -93,4 +114,19 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter {
         return mav;
     }
 
+    public HttpMessageConverter getMessageConverter() {
+        return messageConverter;
+    }
+
+    public void setMessageConverter(HttpMessageConverter messageConverter) {
+        this.messageConverter = messageConverter;
+    }
+
+    public WebBindingInitializer getWebBindingInitializer() {
+        return webBindingInitializer;
+    }
+
+    public void setWebBindingInitializer(WebBindingInitializer webBindingInitializer) {
+        this.webBindingInitializer = webBindingInitializer;
+    }
 }

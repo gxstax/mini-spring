@@ -12,59 +12,26 @@ import java.util.*;
  * @since 2023/3/17 12:43
  **/
 public class ConstructorArgumentValues {
-    private final Map<Integer, ConstructorArgumentValue> indexedArgumentValues = new HashMap<>(0);
-    private final List<ConstructorArgumentValue> genericConstructorArgumentValues = new LinkedList<>();
+    private final List<ConstructorArgumentValue> argumentValueList = new ArrayList<ConstructorArgumentValue>();
 
     public ConstructorArgumentValues() {
     }
 
-    public boolean hasIndexArgumentValue(int index) {
-        return this.indexedArgumentValues.containsKey(index);
+    public void addArgumentValue(ConstructorArgumentValue argumentValue) {
+        this.argumentValueList.add(argumentValue);
     }
 
     public ConstructorArgumentValue getIndexedArgumentValue(int index) {
-        return this.indexedArgumentValues.get(index);
-    }
-
-    public void addGenericArgumentValue(Object value, String type) {
-        this.genericConstructorArgumentValues.add(new ConstructorArgumentValue(value, type));
-    }
-
-    public void addIndexedArgumentValues(Integer index, ConstructorArgumentValue constructorArgumentValue) {
-        this.indexedArgumentValues.put(index, constructorArgumentValue);
-    }
-
-    public void addGenericArgumentValue(ConstructorArgumentValue newValue) {
-        if (null != newValue.getName()) {
-            Iterator<ConstructorArgumentValue> iterator = this.genericConstructorArgumentValues.iterator();
-            for (Iterator<ConstructorArgumentValue> it =
-                 iterator; it.hasNext();) {
-                ConstructorArgumentValue currentArgument = it.next();
-                if (currentArgument.getName().equals(newValue.getName())) {
-                    it.remove();
-                }
-            }
-            this.genericConstructorArgumentValues.add(newValue);
-        }
-    }
-
-    public ConstructorArgumentValue getArgumentValue(String requireName) {
-        for (ConstructorArgumentValue valueHolder : this.genericConstructorArgumentValues) {
-            if (null != valueHolder.getName() &&
-                    (null == requireName || valueHolder.getName().equals(requireName))) {
-                continue;
-            }
-            return valueHolder;
-        }
-        return null;
+        ConstructorArgumentValue argumentValue = this.argumentValueList.get(index);
+        return argumentValue;
     }
 
     public int getArgumentCount() {
-        return this.genericConstructorArgumentValues.size();
+        return (this.argumentValueList.size());
     }
 
     public boolean isEmpty() {
-        return this.genericConstructorArgumentValues.isEmpty();
+        return (this.argumentValueList.isEmpty());
     }
 
 }

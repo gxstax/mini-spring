@@ -51,6 +51,16 @@ public class XmlBeanDefinitionReader {
                 AVS.addArgumentValue(new ArgumentValue(pType, pName, pValue));
             }
             beanDefinition.setArgumentValues(AVS);
+
+            //get constructor
+            ConstructorArgumentValues contructorAVS = new ConstructorArgumentValues();
+            for (Element e : constructorElements) {
+                String pType = e.attributeValue("type");
+                String pName = e.attributeValue("name");
+                String pValue = e.attributeValue("value");
+                contructorAVS.addArgumentValue(new ConstructorArgumentValue(pValue, pType, pName));
+            }
+            beanDefinition.setConstructorArgumentValues(contructorAVS);
             //end of handle constructor
 
             //handle properties

@@ -116,9 +116,6 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
         publishEvent(new ContextRefreshEvent("Context Refreshed..."));
     }
 
-
-
-
     /**
      * <p>
      * 是否存在指定name的bean对象

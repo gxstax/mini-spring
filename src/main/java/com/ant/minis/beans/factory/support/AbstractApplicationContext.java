@@ -5,6 +5,7 @@ import com.ant.minis.beans.factory.config.BeanFactoryPostProcessor;
 import com.ant.minis.beans.factory.config.BeanPostProcessor;
 import com.ant.minis.beans.factory.config.ConfigurableListableBeanFactory;
 import com.ant.minis.context.ApplicationContext;
+import com.ant.minis.context.ApplicationContextAware;
 import com.ant.minis.context.ApplicationEventPublisher;
 import com.ant.minis.core.env.Environment;
 
@@ -35,7 +36,11 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 
     @Override
     public Object getBean(String beanName) throws BeansException {
-        return getBeanFactory().getBean(beanName);
+        Object returnObj = getBeanFactory().getBean(beanName);
+        if (returnObj instanceof ApplicationContextAware) {
+            ((ApplicationContextAware) returnObj).setApplicationContext(this);
+        }
+        return returnObj;
     }
 
     @Override

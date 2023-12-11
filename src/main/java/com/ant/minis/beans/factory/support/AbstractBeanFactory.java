@@ -112,7 +112,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
     @Override
     public void registerBeanDefinition(String name, BeanDefinition bd) {
-        this.beanDefinitionMap.put(name,bd);
+        this.beanDefinitionMap.put(name, bd);
         this.beanDefinitionNames.add(name);
         if (!bd.isLazyInit()) {
             try {

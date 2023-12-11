@@ -35,8 +35,6 @@ public class BeanWrapperImpl extends PropertyEditorRegistrySupport {
         this.wrappedObject = object;
     }
 
-    //绑定参数值
-
     /**
      * <p>
      * 绑定参数值
