@@ -52,7 +52,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
                 System.out.println("get bean null -------------- " + beanName);
                 BeanDefinition bd = beanDefinitionMap.get(beanName);
                 if (bd != null) {
-                    singleton=createBean(bd);
+                    singleton = createBean(bd);
                     this.registerBean(beanName, singleton);
 
                     //beanpostprocessor
@@ -66,8 +66,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
 
                     //step 3 : postProcessAfterInitialization
                     applyBeanPostProcessorsAfterInitialization(singleton, beanName);
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -272,8 +271,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
                         }
 
                         paramValues[0] = pValue;
-                    }
-                    else { //is ref, create the dependent beans
+                    } else { //is ref, create the dependent beans
                         try {
                             paramTypes[0] = Class.forName(pType);
                         } catch (ClassNotFoundException e) {
