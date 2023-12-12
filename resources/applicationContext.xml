@@ -42,15 +42,16 @@
 	</bean>
 
 	<!-- 数据源 -->
-<!--	<bean id="dataSource" class="com.ant.minis.jdbc.datasource.SingleConnectionDataSource">-->
-<!--		<property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>-->
-<!--		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test"/>-->
-<!--		<property type="String" name="username" value="root"/>-->
-<!--		<property type="String" name="password" value="mixc@mixc"/>-->
-<!--	</bean>-->
-<!--	<bean id="jdbcTemplate" class="com.ant.minis.jdbc.core.JdbcTemplate" >-->
-<!--		<property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>-->
-<!--	</bean>-->
+	<bean id="dataSource" class="com.ant.minis.jdbc.datasource.SingleConnectionDataSource">
+		<property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test"/>
+		<property type="String" name="username" value="root"/>
+		<property type="String" name="password" value="mixc@mixc"/>
+	</bean>
+
+	<bean id="jdbcTemplate" class="com.ant.minis.jdbc.core.JdbcTemplate" >
+		<property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
+	</bean>
 
 
 

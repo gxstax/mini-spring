@@ -71,5 +71,12 @@ public class JdbcTemplate {
         return returnObj;
     }
 
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
 
 }
