@@ -1,13 +1,18 @@
 package com.ant.minis.jdbc.datasource;
 
-import javax.sql.DataSource;
+import com.ant.minis.jdbc.pool.PooledConnection;
+
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
+
+import javax.sql.DataSource;
 
 /**
  * <p>
@@ -17,7 +22,8 @@ import java.util.logging.Logger;
  * @author Ant
  * @since 2023/12/11 9:30
  */
-public class SingleConnectionDataSource implements DataSource {
+public class PooledDataSource implements DataSource {
+    private List<PooledConnection> connections = null;
 
     private String driverClassName;
     private String url;
@@ -26,6 +32,8 @@ public class SingleConnectionDataSource implements DataSource {
     private Properties connectionProperties;
     private Connection connection;
 
+    private int initialSize = 2;
+
     /**
      * <p>
      * 默认构造函数
@@ -33,8 +41,21 @@ public class SingleConnectionDataSource implements DataSource {
      *
      * @return
      */
-    public SingleConnectionDataSource() {
+    public PooledDataSource() {
+    }
 
+    private void initPool() {
+        this.connections = new ArrayList<>(initialSize);
+        try {
+            for(int i = 0; i < initialSize; i++){
+                Connection connect = DriverManager.getConnection(url, username, password);
+                PooledConnection pooledConnection = new PooledConnection(connect, false);
+                this.connections.add(pooledConnection);
+                System.out.println("********add connection pool*********");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public String getDriverClassName() {
@@ -117,17 +138,28 @@ public class SingleConnectionDataSource implements DataSource {
         return null;
     }
 
-    public Connection getConnection() throws SQLException {
-        return getConnection(this.username, this.password);
+    public Connection getConnection() {
+        return connection;
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return getConnectionFromDriver(username, password);
+        return null;
     }
 
     public void setConnection(Connection connection) {
         this.connection = connection;
+    }
+
+    private PooledConnection getAvailableConnection() throws SQLException{
+        for(PooledConnection pooledConnection : this.connections){
+            if (!pooledConnection.getActive()) {
+                pooledConnection.setActive(true);
+                return pooledConnection;
+            }
+        }
+
+        return null;
     }
 
     /**

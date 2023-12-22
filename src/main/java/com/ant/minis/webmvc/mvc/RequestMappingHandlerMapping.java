@@ -49,10 +49,10 @@ public class RequestMappingHandlerMapping implements HandlerMapping, Application
                 e.printStackTrace();
             }
             Method[] methods = clz.getDeclaredMethods();
-            if(methods!=null){
-                for(Method method : methods){
+            if(methods!=null) {
+                for(Method method : methods) {
                     boolean isRequestMapping = method.isAnnotationPresent(RequestMapping.class);
-                    if (isRequestMapping){
+                    if (isRequestMapping) {
                         String methodName = method.getName();
                         String urlmapping = method.getAnnotation(RequestMapping.class).value();
                         this.mappingRegistry.getUrlMappingNames().add(urlmapping);

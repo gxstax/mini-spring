@@ -54,8 +54,10 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
         if (isRefresh) {
             try {
                 refresh();
-            } catch (Exception e) {
-
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            } catch (BeansException e) {
+                e.printStackTrace();
             }
         }
     }

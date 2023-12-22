@@ -13,7 +13,7 @@
 	</bean>
 
 	<bean id="baseservice" class="com.ant.test.service.BaseService" />
-	<bean id="userService" class="com.ant.test.service.UserService" />
+<!--	<bean id="userService" class="com.ant.test.service.UserService" />-->
 
 	<bean id="handlerMapping" class="com.ant.minis.webmvc.mvc.RequestMappingHandlerMapping"/>
 
@@ -44,7 +44,7 @@
 	<!-- 数据源 -->
 	<bean id="dataSource" class="com.ant.minis.jdbc.datasource.SingleConnectionDataSource">
 		<property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test"/>
+		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test?useUnicode=true"/>
 		<property type="String" name="username" value="root"/>
 		<property type="String" name="password" value="mixc@mixc"/>
 	</bean>
@@ -53,6 +53,20 @@
 		<property type="javax.sql.DataSource" name="dataSource" ref="dataSource"/>
 	</bean>
 
+	<bean id="dataSource" class="com.ant.minis.jdbc.datasource.PooledDataSource">
+		<property type="String" name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property type="String" name="url" value="jdbc:mysql://10.10.44.37:8836/test?useUnicode=true"/>
+		<property type="String" name="username" value="root"/>
+		<property type="String" name="password" value="mixc@mixc"/>
+	</bean>
+
+	<bean id="sqlSessionFactory" class="com.ant.minis.batis.DefaultSqlSessionFactory" init-method="init">
+		<property type="String" name="mapperLocations" value="mapper"></property>
+	</bean>
+
+	<bean id="userService" class="com.ant.test.service.UserService">
+		<property type="com.ant.minis.jdbc.core.JdbcTemplate" name="jdbcTemplate" ref="jdbcTemplate"></property>
+	</bean>
 
 
 </beans>

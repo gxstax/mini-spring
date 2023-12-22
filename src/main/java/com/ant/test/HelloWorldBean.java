@@ -1,8 +1,11 @@
 package com.ant.test;
 
+import com.ant.minis.beans.factory.annotation.Autowired;
+import com.ant.minis.jdbc.core.JdbcTemplate;
 import com.ant.minis.web.bind.annotation.RequestMapping;
 import com.ant.minis.web.bind.annotation.ResponseBody;
 import com.ant.test.entity.User;
+import com.ant.test.service.UserService;
 
 import java.util.Date;
 
@@ -15,6 +18,9 @@ import java.util.Date;
  * @since 2023/11/27 19:01
  */
 public class HelloWorldBean {
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/test")
     public String doTest() {
@@ -32,8 +38,17 @@ public class HelloWorldBean {
     @RequestMapping("/test7")
     @ResponseBody
     public User doTest7(User user) {
+        User userInfo = userService.getUserInfo(1);
         user.setName(user.getName() + "---");
         user.setBirthday(new Date());
-        return user;
+        return userInfo;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

@@ -79,11 +79,9 @@ public class RequestMappingHandlerAdapter implements HandlerAdapter {
                 webBindingInitializer.initBinder(wdb);
                 wdb.bind(request);
                 methodParamObjs[i] = methodParamObj;
-            }
-            else if (methodParameter.getType()==HttpServletRequest.class) {
+            } else if (methodParameter.getType()==HttpServletRequest.class) {
                 methodParamObjs[i] = request;
-            }
-            else if (methodParameter.getType()==HttpServletResponse.class) {
+            } else if (methodParameter.getType()==HttpServletResponse.class) {
                 methodParamObjs[i] = response;
             }
             i++;

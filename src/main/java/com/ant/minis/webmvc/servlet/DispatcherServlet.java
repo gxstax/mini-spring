@@ -83,12 +83,13 @@ public class DispatcherServlet extends HttpServlet {
         this.packageNames = XmlScanComponentHelper.getNodeValue(xmlPath);
 
         this.webApplicationContext = new AnnotationConfigWebApplicationContext(sContextConfigLocation, this.parentApplicationContext);
+
         refresh();
     }
 
     protected void refresh() {
         // 初始化 controller
-        initController();
+//        initController();
 
         initHandlerMappings(this.webApplicationContext);
 

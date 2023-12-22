@@ -60,6 +60,8 @@ public class AnnotationConfigWebApplicationContext extends AbstractApplicationCo
         DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
         this.beanFactory = bf;
         this.beanFactory.setParent(this.parentApplicationContext.getBeanFactory());
+
+        registerBeanPostProcessors(bf);
         loadBeanDefinitions(controllerNames);
 
         if (true) {
