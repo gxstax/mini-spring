@@ -20,6 +20,12 @@
 	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
 
 
+	<bean id="realaction" class="com.ant.test.proxy.Action1" />
+
+	<bean id="action" class="com.ant.minis.aop.ProxyFactoryBean" >
+		<property type="java.lang.Object" name="target" ref="realaction"/>
+	</bean>
+
 
 	<bean id="objectMapper" class="com.ant.minis.web.converter.DefaultObjectMapper" >
 		<property type="String" name="dateFormat" value="yyyy/MM/dd"/>

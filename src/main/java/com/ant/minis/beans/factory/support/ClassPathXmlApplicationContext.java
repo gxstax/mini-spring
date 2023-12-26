@@ -49,10 +49,12 @@ public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
         Resource resource = new ClassPathXmlResource(fileName);
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+        // 把扫描到的信息，转换为beanDefinition对象放到spring的beanDefinitionMap集合中
         reader.loadBeanDefinitions(resource);
         this.beanFactory = beanFactory;
         if (isRefresh) {
             try {
+                // 执行bean的声明周期，从实例化一直到初始化Bean
                 refresh();
             } catch (IllegalStateException e) {
                 e.printStackTrace();

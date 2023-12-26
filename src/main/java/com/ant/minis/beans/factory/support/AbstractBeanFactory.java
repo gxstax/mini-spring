@@ -3,7 +3,9 @@ package com.ant.minis.beans.factory.support;
 
 import com.ant.minis.beans.*;
 import com.ant.minis.beans.factory.BeanFactory;
+import com.ant.minis.beans.factory.FactoryBean;
 import com.ant.minis.beans.factory.config.BeanDefinition;
+import com.ant.minis.beans.factory.config.ConfigurableBeanFactory;
 import com.ant.minis.beans.factory.config.ConstructorArgumentValue;
 import com.ant.minis.beans.factory.config.ConstructorArgumentValues;
 
@@ -25,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2023/4/5 23:46
  **/
 //@Slf4j
-public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry implements BeanFactory, BeanDefinitionRegistry {
+public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory, BeanDefinitionRegistry {
 
     protected Map<String,BeanDefinition> beanDefinitionMap=new ConcurrentHashMap<>(256);
     protected List<String> beanDefinitionNames=new ArrayList<>();
@@ -72,7 +74,10 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
                     return null;
                 }
             }
-
+        }
+        // 处理 factoryBean
+        if (singleton instanceof FactoryBean) {
+            return this.getObjectForBeanInstance(singleton, beanName);
         }
 //        if (singleton == null) {
 //        	throw new BeansException("bean is null.");
@@ -99,6 +104,17 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry i
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    protected Object getObjectForBeanInstance(Object beanInstance, String beanName) {
+        // Now we have the bean instance, which may be a normal bean or a FactoryBean.
+        if (!(beanInstance instanceof FactoryBean)) {
+            return beanInstance;
+        }
+        Object object = null;
+        FactoryBean<?> factory = (FactoryBean<?>) beanInstance;
+        object = getObjectFromFactoryBean(factory, beanName);
+        return object;
     }
 
     @Override

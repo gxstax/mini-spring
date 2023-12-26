@@ -92,7 +92,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         }
     }
 
-    protected void registerDependentBean(String beanName, String dependentBeanName) {
+    public void registerDependentBean(String beanName, String dependentBeanName) {
         Set<String> dependentBeans = this.dependentBeanMap.get(beanName);
         if (dependentBeans != null && dependentBeans.contains(dependentBeanName)) {
             return;
@@ -118,17 +118,19 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
 
     }
 
-    protected boolean hasDependentBean(String beanName) {
+    public boolean hasDependentBean(String beanName) {
         return this.dependentBeanMap.containsKey(beanName);
     }
-    protected String[] getDependentBeans(String beanName) {
+
+    public String[] getDependentBeans(String beanName) {
         Set<String> dependentBeans = this.dependentBeanMap.get(beanName);
         if (dependentBeans == null) {
             return new String[0];
         }
         return (String[]) dependentBeans.toArray();
     }
-    protected String[] getDependenciesForBean(String beanName) {
+
+    public String[] getDependenciesForBean(String beanName) {
         Set<String> dependenciesForBean = this.dependenciesForBeanMap.get(beanName);
         if (dependenciesForBean == null) {
             return new String[0];
