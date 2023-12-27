@@ -9,5 +9,5 @@ package com.ant.minis.aop;
  * @since 2023/12/25 10:54
  */
 public interface AopProxyFactory {
-    AopProxy createAopProxy(Object target);
+    AopProxy createAopProxy(Object target, Advisor advisor);
 }

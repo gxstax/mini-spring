@@ -20,10 +20,15 @@
 	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
 
 
+	<bean id="myInterceptor" class="com.ant.test.service.TracingInterceptor" />
+
+	<bean id="myBeforeAdvice" class="com.ant.test.service.MyBeforeAdvice" />
+
 	<bean id="realaction" class="com.ant.test.proxy.Action1" />
 
 	<bean id="action" class="com.ant.minis.aop.ProxyFactoryBean" >
 		<property type="java.lang.Object" name="target" ref="realaction"/>
+		<property type="String" name="interceptorName" value="myBeforeAdvice"/>
 	</bean>
 
 

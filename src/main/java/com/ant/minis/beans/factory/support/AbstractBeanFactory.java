@@ -3,6 +3,7 @@ package com.ant.minis.beans.factory.support;
 
 import com.ant.minis.beans.*;
 import com.ant.minis.beans.factory.BeanFactory;
+import com.ant.minis.beans.factory.BeanFactoryAware;
 import com.ant.minis.beans.factory.FactoryBean;
 import com.ant.minis.beans.factory.config.BeanDefinition;
 import com.ant.minis.beans.factory.config.ConfigurableBeanFactory;
@@ -58,6 +59,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
                 if (bd != null) {
                     singleton = createBean(bd);
                     this.registerBean(beanName, singleton);
+
+                    // 处理 BeanFactoryAware
+                    if (singleton instanceof BeanFactoryAware) {
+                        ((BeanFactoryAware) singleton).setBeanFactory(this);
+                    }
 
                     //beanpostprocessor
                     //step 1 : postProcessBeforeInitialization
