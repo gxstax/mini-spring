@@ -10,4 +10,6 @@ package com.ant.test.proxy;
  */
 public interface IAction {
     void doAction();
+
+    void doSomething();
 }

@@ -26,61 +26,7 @@ public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
 
     private String interceptorName;
 
-    private Advisor advisor;
-
-    private synchronized void initializeAdvisor() {
-        Object advice;
-        MethodInterceptor mi = null;
-
-        try {
-            advice = this.beanFactory.getBean(this.interceptorName);
-        } catch (BeansException e) {
-            throw new RuntimeException(e);
-        }
-
-        if (advice instanceof BeforeAdvice) {
-            mi = new MethodBeforeAdviceInterceptor((MethodBeforeAdvice)advice);
-        } else if (advice instanceof AfterAdvice) {
-            mi = new AfterReturningAdviceInterceptor((AfterReturningAdvice)advice);
-        } else if (advice instanceof MethodInterceptor) {
-            mi = (MethodInterceptor)advice;
-        }
-
-        advisor = new DefaultAdvisor();
-        advisor.setMethodInterceptor(mi);
-    }
-
-    public ProxyFactoryBean() {
-        this.aopProxyFactory = new DefaultAopProxyFactory();
-    }
-
-    public ProxyFactoryBean(AopProxyFactory aopProxyFactory) {
-        this.aopProxyFactory = aopProxyFactory;
-    }
-
-    public AopProxyFactory getAopProxyFactory() {
-        return this.aopProxyFactory;
-    }
-
-    protected AopProxy createAopProxy() {
-        return getAopProxyFactory().createAopProxy(target, this.advisor);
-    }
-
-    public String getTargetName() {
-        return targetName;
-    }
-
-    public void setTargetName(String targetName) {
-        this.targetName = targetName;
-    }
-
-    public Object getTarget() {
-        return target;
-    }
-
-    public void setTarget(Object target) {
-        this.target = target;
-    }
+    private PointcutAdvisor advisor;
 
     /**
      * <p>
@@ -93,6 +39,26 @@ public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
     public Object getObject() throws Exception {
         initializeAdvisor();
         return getSingletonInstance();
+    }
+
+    private synchronized void initializeAdvisor() {
+        Object advice;
+//        MethodInterceptor mi = null;
+
+        try {
+            advice = this.beanFactory.getBean(this.interceptorName);
+        } catch (BeansException e) {
+            throw new RuntimeException(e);
+        }
+
+//        if (advice instanceof BeforeAdvice) {
+//            mi = new MethodBeforeAdviceInterceptor((MethodBeforeAdvice)advice);
+//        } else if (advice instanceof AfterAdvice) {
+//            mi = new AfterReturningAdviceInterceptor((AfterReturningAdvice)advice);
+//        } else if (advice instanceof MethodInterceptor) {
+//            mi = (MethodInterceptor)advice;
+//        }
+        this.advisor = (PointcutAdvisor) advice;
     }
 
     private synchronized Object getSingletonInstance() {
@@ -132,5 +98,37 @@ public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
+    }
+
+    public ProxyFactoryBean() {
+        this.aopProxyFactory = new DefaultAopProxyFactory();
+    }
+
+    public ProxyFactoryBean(AopProxyFactory aopProxyFactory) {
+        this.aopProxyFactory = aopProxyFactory;
+    }
+
+    public AopProxyFactory getAopProxyFactory() {
+        return this.aopProxyFactory;
+    }
+
+    protected AopProxy createAopProxy() {
+        return getAopProxyFactory().createAopProxy(target, this.advisor);
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public Object getTarget() {
+        return target;
+    }
+
+    public void setTarget(Object target) {
+        this.target = target;
     }
 }

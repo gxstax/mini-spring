@@ -55,12 +55,11 @@ public class HelloWorldBean {
     @RequestMapping("/testaop")
     public void doTestAop(HttpServletRequest request, HttpServletResponse response) {
         action.doAction();
-        String str = "test aop, hello world!";
-        try {
-            response.getWriter().write(str);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    }
+
+    @RequestMapping("/testaop2")
+    public void doTestAop2(HttpServletRequest request, HttpServletResponse response) {
+        action.doSomething();
     }
 
     public UserService getUserService() {
