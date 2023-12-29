@@ -131,4 +131,8 @@ public class ProxyFactoryBean implements FactoryBean<Object>, BeanFactoryAware {
     public void setTarget(Object target) {
         this.target = target;
     }
+
+    public void setAopProxyFactory(AopProxyFactory aopProxyFactory) {
+        this.aopProxyFactory = aopProxyFactory;
+    }
 }

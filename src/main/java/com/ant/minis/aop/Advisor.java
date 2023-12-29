@@ -2,7 +2,7 @@ package com.ant.minis.aop;
 
 /**
  * <p>
- *
+ * 通知者
  * </p>
  *
  * @author Ant
