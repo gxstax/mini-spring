@@ -20,23 +20,28 @@
 	<bean id="webBindingInitializer" class="com.ant.test.DateInitializer" />
 
 
-	<bean id = "autoProxyCreator" class="com.ant.minis.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+	<bean id ="autoProxyCreator" class="com.ant.minis.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property type="String" name="pattern" value="action*"/>
 		<property type="String" name="interceptorName" value="advisor"/>
 	</bean>
+
+	<bean id="autowiredAnnotationBeanPostProcessor" class="com.ant.minis.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
 
 	<bean id="myInterceptor" class="com.ant.test.service.TracingInterceptor" />
 
 	<bean id="beforeAdvice" class="com.ant.test.service.MyBeforeAdvice" />
 
-	<bean id="realaction" class="com.ant.test.proxy.Action1" />
 
 	<bean id="advisor" class="com.ant.minis.aop.NameMatchMethodPointcutAdvisor">
 		<property type="com.ant.minis.aop.Advice" name="advice" ref="beforeAdvice"/>
 		<property type="String" name="mappedName" value="do*"/>
 	</bean>
 
-<!--	<bean id="action" class="com.ant.minis.aop.ProxyFactoryBean" >-->
+	<bean id="action" class="com.ant.test.proxy.Action1" />
+
+
+	<!--	<bean id="action" class="com.ant.minis.aop.ProxyFactoryBean" >-->
 <!--		<property type="java.lang.Object" name="target" ref="realaction"/>-->
 <!--		<property type="String" name="interceptorName" value="advisor"/>-->
 <!--	</bean>-->

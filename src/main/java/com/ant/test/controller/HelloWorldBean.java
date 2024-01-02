@@ -30,6 +30,9 @@ public class HelloWorldBean {
     @Autowired
     private IAction action;
 
+    @Autowired
+    private IAction action2;
+
     @RequestMapping("/test")
     public String doTest() {
         return "hello world for doTest!";
@@ -61,6 +64,17 @@ public class HelloWorldBean {
     public void doTestAop2(HttpServletRequest request, HttpServletResponse response) {
         action.doSomething();
     }
+
+    @RequestMapping("/testaop3")
+    public void doTestAop3(HttpServletRequest request, HttpServletResponse response) {
+        action2.doAction();
+    }
+
+    @RequestMapping("/testaop4")
+    public void doTestAop4(HttpServletRequest request, HttpServletResponse response) {
+        action2.doSomething();
+    }
+
 
     public UserService getUserService() {
         return userService;

@@ -5,10 +5,7 @@ import com.ant.minis.beans.*;
 import com.ant.minis.beans.factory.BeanFactory;
 import com.ant.minis.beans.factory.BeanFactoryAware;
 import com.ant.minis.beans.factory.FactoryBean;
-import com.ant.minis.beans.factory.config.BeanDefinition;
-import com.ant.minis.beans.factory.config.ConfigurableBeanFactory;
-import com.ant.minis.beans.factory.config.ConstructorArgumentValue;
-import com.ant.minis.beans.factory.config.ConstructorArgumentValues;
+import com.ant.minis.beans.factory.config.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -67,7 +64,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
                     //beanpostprocessor
                     //step 1 : postProcessBeforeInitialization
-                    applyBeanPostProcessorsBeforeInitialization(singleton, beanName);
+                    singleton = applyBeanPostProcessorsBeforeInitialization(singleton, beanName);
 
                     //step 2 : init-method
                     if (bd.getInitMethodName() != null && !bd.getInitMethodName().equals("")) {
@@ -76,6 +73,9 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 
                     //step 3 : postProcessAfterInitialization
                     applyBeanPostProcessorsAfterInitialization(singleton, beanName);
+
+                    this.removeSingleton(beanName);
+                    this.registerBean(beanName, singleton);
                 } else {
                     return null;
                 }
@@ -84,6 +84,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
         // 处理 factoryBean
         if (singleton instanceof FactoryBean) {
             return this.getObjectForBeanInstance(singleton, beanName);
+        }
+
+        // 处理BeanPostProcessor
+        if (singleton instanceof BeanPostProcessor) {
+            this.addBeanPostProcessor((BeanPostProcessor) singleton);
         }
 //        if (singleton == null) {
 //        	throw new BeansException("bean is null.");
